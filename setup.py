@@ -16,7 +16,7 @@ setup(
     version="0.2",
     description="This app show unicode info",
     options={"build_exe": {"includes": includes}},
-    executables=[Executable("thecode.py", base=base)])
+    executables=[Executable("unichar.py", base=base)])
 
 """
 v0.2 2012. 9. 27
