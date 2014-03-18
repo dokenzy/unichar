@@ -13,4 +13,6 @@ Bug
 
 To Do
 -----
-* Packaging for Windows and Mac OS X using cx_Freeze or py2app
+* Packaging for Windows using cx_Freeze
+* setup.py 하나로 Mac과 Windows 모두 빌드할 수 있도록.
+* 코드를 입력할 때 U+AC00 처럼 입력해도 처리할 수 있도록 수정
