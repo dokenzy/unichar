@@ -5,7 +5,7 @@ Show unicode codepoint and single character
 
 Screenshot
 ----------
-![unichar screenshot](https://github.com/dokenzy/unichar/blob/master/unichar.png)
+![unichar screenshot](https://raw.github.com/dokenzy/unichar/master/unichar.png)
 
 Require
 --------
