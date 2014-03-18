@@ -3,6 +3,10 @@ unichar
 
 Show unicode codepoint and single character
 
+Screenshot
+----------
+![unichar screenshot](https://github.com/dokenzy/unichar/blob/master/unichar.png)
+
 Require
 --------
 Python 2.7, PyQt4
