@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['thecode.py']
+APP = ['unichar.py']
 DATA_FILES = []
 OPTIONS = {'argv_emulation': True,
            'includes': ['sip', 'PyQt4._qt']

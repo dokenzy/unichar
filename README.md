@@ -7,6 +7,10 @@ Require
 --------
 Python 2.7, PyQt4
 
+Build
+-----
+python setup.py py2app(Mac)
+
 Bug
 ---
 * Can't input non-ascii character like '가'. But can input 'ac00' in input box 'Unicode'.
