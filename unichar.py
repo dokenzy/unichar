@@ -71,6 +71,9 @@ class TheCode(QDialog):
 
     def showChar(self):
         _code = self.myCode.text()
+        _code = _code.toUpper()
+        if _code[0:2] == QString('U+'):
+            _code = _code[2:]
         self._setText(_code)
         self.myCode.setText(_code.toUpper())
         _code = int(unicode(_code), 16)  #convert hex to integer
@@ -81,6 +84,7 @@ class TheCode(QDialog):
             self.lblUniName.setText(UNINAME)
         except:
             self.lblUniName.setText("")
+        self.myCode.selectAll()
 
 
 if __name__ == '__main__':
