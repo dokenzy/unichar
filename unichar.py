@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-__version__ = '0.3'
+myname = "UniChar"
+__version__ = '0.5'
 
 import sys
 import unicodedata
@@ -14,7 +15,7 @@ class TheCode(QDialog):
         self.initUi()
 
     def initUi(self):
-        self.setWindowTitle("The Code")
+        self.setWindowTitle("{0} v{1}".format(myname, __version__))
         lblScript = QLabel('Character')
         self.myChar = QLineEdit()
         self.myChar.setMaxLength(1)
@@ -34,7 +35,6 @@ class TheCode(QDialog):
         layout1 = QHBoxLayout()
         layout1.addWidget(lblScript)
         layout1.addWidget(self.myChar)
-        #layout1.addWidget(self.btnCode)
 
         layout2 = QHBoxLayout()
         layout2.addWidget(self.lblUnicode)
@@ -67,7 +67,8 @@ class TheCode(QDialog):
             self.lblUniName.setText(UNINAME)
         except:
             self.lblUniName.setText("")
-        self.myChar.selectAll()
+        finally:
+            self.myChar.selectAll()
 
     def showChar(self):
         _code = self.myCode.text()
@@ -76,15 +77,16 @@ class TheCode(QDialog):
             _code = _code[2:]
         self._setText(_code)
         self.myCode.setText(_code.toUpper())
-        _code = int(unicode(_code), 16)  #convert hex to integer
-        _unicode = unichr(_code)
-        self.myChar.setText(QString(_unicode))
         try:
+            _code = int(unicode(_code), 16)  #convert hex to integer
+            _unicode = unichr(_code)
+            self.myChar.setText(QString(_unicode))
             UNINAME = unicodedata.name(unichr(_code))
             self.lblUniName.setText(UNINAME)
         except:
             self.lblUniName.setText("")
-        self.myCode.selectAll()
+        finally:
+            self.myCode.selectAll()
 
 
 if __name__ == '__main__':
