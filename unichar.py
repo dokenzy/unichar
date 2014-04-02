@@ -28,9 +28,7 @@ class UniChar(QDialog):
         self.btnCode = QPushButton("Code")
         self._lblUnicode = QLabel()
         self.lblUnicode = QLabel("Unicode Hex")
-        # TODO
-        # 변수명 변경 myCode > hexCode
-        self.myCode = QLineEdit()
+        self.hexCode = QLineEdit()
         self.lblUnicodeDec = QLabel("Unicode Dec")
         self.decCode = QLineEdit()
         self._lblUniName = QLabel("Unicode Name")
@@ -53,7 +51,7 @@ class UniChar(QDialog):
 
         layout2 = QHBoxLayout()
         layout2.addWidget(self.lblUnicode)
-        layout2.addWidget(self.myCode)
+        layout2.addWidget(self.hexCode)
 
         layout3 = QHBoxLayout()
         layout3.addWidget(self.lblUnicodeDec)
@@ -80,22 +78,11 @@ class UniChar(QDialog):
 
         self.setLayout(layout)
 
-        self.connect(self.myChar, SIGNAL("returnPressed()"), self.showCode)
-        self.connect(self.myCode, SIGNAL("returnPressed()"), self.showChar)
-        self.connect(self.decCode, SIGNAL("returnPressed()"), self.showCharHex)
+        self.connect(self.myChar, SIGNAL("returnPressed()"), self.change_by_char)
+        self.connect(self.hexCode, SIGNAL("returnPressed()"), self.change_by_hex)
+        self.connect(self.decCode, SIGNAL("returnPressed()"), self.change_by_dec)
 
-    def setFormatText(self, code):
-        self.lblFileFormat.setText("<a href='http://www.fileformat.info/info/unicode/char/{}/index.htm'>more info</a>".format(unicode(code)))
-
-    def setCharInfo(self, _char):
-        ch = unicode(_char)  # ex) 'a', '가', ...
-        uni_hex = "%04X" % (ord(unicode(_char)))  # if '가': AC00
-        uni_dec = unicode(ord(ch))  # if '가': 44032
-        uni_name = unicodedata.name(ch)  # if '가': HANGUL SYLLABLE GA
-        cat = unicodedata.category(ch)  # if '가': Lo
-        return dict(char=_char, ch=ch, uni_hex=uni_hex, uni_dec=uni_dec, uni_name=uni_name, cat=cat)
-
-    def showCode(self):
+    def change_by_char(self):
         _char = self.myChar.text()
         try:
             charInfo = self.setCharInfo(_char)
@@ -109,10 +96,10 @@ class UniChar(QDialog):
 
     # TODO
     # rename func name
-    def showChar(self):
+    def change_by_hex(self):
         # TODO
         # 한글을 입력한 후 10진수 입력하면 16진수값이 바뀌지 않는 문제 있음
-        _code = self.myCode.text()
+        _code = self.hexCode.text()
         _code = _code.toUpper()
         if _code[0:2] == QString('U+'):
             _code = _code[2:]
@@ -126,9 +113,9 @@ class UniChar(QDialog):
         finally:
             # TODO
             # refactoring: selectAll(myCode)
-            self.myCode.selectAll()
+            self.hexCode.selectAll()
 
-    def showCharHex(self):
+    def change_by_dec(self):
         _code = self.decCode.text()
         try:
             _char = unichr(int(_code))
@@ -141,9 +128,20 @@ class UniChar(QDialog):
             # refactoring: selectAll(decCode)
             self.decCode.selectAll()
 
+    def setFormatText(self, code):
+        self.lblFileFormat.setText("<a href='http://www.fileformat.info/info/unicode/char/{}/index.htm'>more info</a>".format(unicode(code)))
+
+    def setCharInfo(self, _char):
+        ch = unicode(_char)  # ex) 'a', '가', ...
+        uni_hex = "%04X" % (ord(unicode(_char)))  # if '가': AC00
+        uni_dec = unicode(ord(ch))  # if '가': 44032
+        uni_name = unicodedata.name(ch)  # if '가': HANGUL SYLLABLE GA
+        cat = unicodedata.category(ch)  # if '가': Lo
+        return dict(char=_char, ch=ch, uni_hex=uni_hex, uni_dec=uni_dec, uni_name=uni_name, cat=cat)
+
     def clear(self):
         self.myChar.setText("")
-        self.myCode.setText("")
+        self.hexCode.setText("")
         self.decCode.setText("")
         self.lblUniName.setText("")
         self.lblCategory.setText("")
@@ -151,7 +149,7 @@ class UniChar(QDialog):
 
     def displayText(self, ci):
         self.myChar.setText(QString(ci['char']))
-        self.myCode.setText(QString(ci['uni_hex']))
+        self.hexCode.setText(QString(ci['uni_hex']))
         self.decCode.setText(ci['uni_dec'])
         self.lblUniName.setText(ci['uni_name'])
         self.lblCategory.setText(get_category(ci['cat']))
