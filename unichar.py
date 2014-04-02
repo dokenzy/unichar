@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 myname = "UniChar"
-__version__ = '0.6'
+__version__ = '0.6.1'
 
 import sys
 import unicodedata
@@ -84,29 +84,31 @@ class UniChar(QDialog):
         self.connect(self.myCode, SIGNAL("returnPressed()"), self.showChar)
         self.connect(self.decCode, SIGNAL("returnPressed()"), self.showCharHex)
 
-    def _setText(self, code):
+    def setFormatText(self, code):
         self.lblFileFormat.setText("<a href='http://www.fileformat.info/info/unicode/char/{}/index.htm'>more info</a>".format(unicode(code)))
+
+    def setCharInfo(self, _char):
+        ch = unicode(_char)  # ex) 'a', '가', ...
+        uni_hex = "%04X" % (ord(unicode(_char)))  # if '가': AC00
+        uni_dec = unicode(ord(ch))  # if '가': 44032
+        uni_name = unicodedata.name(ch)  # if '가': HANGUL SYLLABLE GA
+        cat = unicodedata.category(ch)  # if '가': Lo
+        return dict(char=_char, ch=ch, uni_hex=uni_hex, uni_dec=uni_dec, uni_name=uni_name, cat=cat)
 
     def showCode(self):
         _char = self.myChar.text()
-        _unicode = "%04X" % (ord(unicode(_char)))
-        self._setText(_unicode)
-        self.myCode.setText(QString(_unicode))
         try:
-            ch = unicode(_char)
-            UNINAME = unicodedata.name(ch)
-            cat = unicodedata.category(ch)
-            DEC = unicode(ord(unicode(_char)))
-            self.lblUniName.setText(UNINAME)
-            self.lblCategory.setText(get_category(cat))
-            self.decCode.setText(DEC)
+            charInfo = self.setCharInfo(_char)
+            self.displayText(charInfo)
         except:
-            self.lblUniName.setText("")
-            self.lblCategory.setText("")
-            self.decCode.setText("")
+            self.clear()
         finally:
+            # TODO
+            # refactoring: selectAll(myChar)
             self.myChar.selectAll()
 
+    # TODO
+    # rename func name
     def showChar(self):
         # TODO
         # 한글을 입력한 후 10진수 입력하면 16진수값이 바뀌지 않는 문제 있음
@@ -114,49 +116,46 @@ class UniChar(QDialog):
         _code = _code.toUpper()
         if _code[0:2] == QString('U+'):
             _code = _code[2:]
-        self._setText(_code)
-        self.myCode.setText(_code.toUpper())
         try:
-            DEC = unicode(_code)
-            _code = int(DEC, 16)  #convert hex to integer
-            _unicode = unichr(_code)
-            self.myChar.setText(QString(_unicode))
-            UNINAME = unicodedata.name(unichr(_code))
-            cat = unicodedata.category(unichr(_code))
-            self.lblUniName.setText(UNINAME)
-            self.lblCategory.setText(get_category(cat))
-            self.decCode.setText(unicode(_code))
+            _code = int(unicode(_code), 16)  #convert hex to integer
+            _char = unichr(_code)
+            charInfo = self.setCharInfo(_char)
+            self.displayText(charInfo)
         except:
-            self.lblUniName.setText("")
-            self.lblCategory.setText("")
-            self.decCode.setText("")
+            self.clear()
         finally:
+            # TODO
+            # refactoring: selectAll(myCode)
             self.myCode.selectAll()
 
     def showCharHex(self):
         _code = self.decCode.text()
-        self._setText(_code)
-        self.decCode.setText(_code)
         try:
-            # TODO
-            # refactoring
-            _code = int(_code)
-            DEC = unicode(_code)
-            hexcode = hex(_code)[2:]  #convert integer to hex
-            _unicode = unichr(_code)
-            self.myChar.setText(QString(_unicode))
-            UNINAME = unicodedata.name(unichr(_code))
-            cat = unicodedata.category(unichr(_code))
-            self.lblUniName.setText(UNINAME)
-            self.myCode.setText(unicode(hexcode))
-            self.lblCategory.setText(get_category(cat))
-            self.decCode.setText(DEC)
+            _char = unichr(int(_code))
+            charInfo = self.setCharInfo(_char)
+            self.displayText(charInfo)
         except:
-            self.lblUniName.setText("")
-            self.lblCategory.setText("")
-            self.decCode.setText("")
+            self.clear()
         finally:
+            # TODO
+            # refactoring: selectAll(decCode)
             self.decCode.selectAll()
+
+    def clear(self):
+        self.myChar.setText("")
+        self.myCode.setText("")
+        self.decCode.setText("")
+        self.lblUniName.setText("")
+        self.lblCategory.setText("")
+        self.setFormatText("")
+
+    def displayText(self, ci):
+        self.myChar.setText(QString(ci['char']))
+        self.myCode.setText(QString(ci['uni_hex']))
+        self.decCode.setText(ci['uni_dec'])
+        self.lblUniName.setText(ci['uni_name'])
+        self.lblCategory.setText(get_category(ci['cat']))
+        self.setFormatText(ci['uni_hex'])
 
 
 if __name__ == '__main__':
