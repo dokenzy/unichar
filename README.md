@@ -20,7 +20,7 @@ Python 2.7, PyQt4
 
 Build
 -----
-python setup.py py2app(Mac)
+$ pyinstaller unichar.py --windowed
 
 
 To Do
