@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 myname = "UniChar"
-__version__ = '0.6.1'
+__version__ = '0.6.1.1'
 
 import sys
 import unicodedata
@@ -85,8 +85,7 @@ class UniChar(QDialog):
     def change_by_char(self):
         _char = self.myChar.text()
         try:
-            charInfo = self.setCharInfo(_char)
-            self.displayText(charInfo)
+            self.displayText(_char)
         except:
             self.clear()
         finally:
@@ -106,8 +105,7 @@ class UniChar(QDialog):
         try:
             _code = int(unicode(_code), 16)  #convert hex to integer
             _char = unichr(_code)
-            charInfo = self.setCharInfo(_char)
-            self.displayText(charInfo)
+            self.displayText(_char)
         except:
             self.clear()
         finally:
@@ -119,8 +117,7 @@ class UniChar(QDialog):
         _code = self.decCode.text()
         try:
             _char = unichr(int(_code))
-            charInfo = self.setCharInfo(_char)
-            self.displayText(charInfo)
+            self.displayText(_char)
         except:
             self.clear()
         finally:
@@ -137,7 +134,13 @@ class UniChar(QDialog):
         uni_dec = unicode(ord(ch))  # if '가': 44032
         uni_name = unicodedata.name(ch)  # if '가': HANGUL SYLLABLE GA
         cat = unicodedata.category(ch)  # if '가': Lo
-        return dict(char=_char, ch=ch, uni_hex=uni_hex, uni_dec=uni_dec, uni_name=uni_name, cat=cat)
+        return dict(char=_char,
+                    ch=ch,
+                    uni_hex=uni_hex,
+                    uni_dec=uni_dec,
+                    uni_name=uni_name,
+                    cat=cat
+                    )
 
     def clear(self):
         self.myChar.setText("")
@@ -147,7 +150,9 @@ class UniChar(QDialog):
         self.lblCategory.setText("")
         self.setFormatText("")
 
-    def displayText(self, ci):
+    def displayText(self, _char):
+        ci = self.setCharInfo(_char)
+
         self.myChar.setText(QString(ci['char']))
         self.hexCode.setText(QString(ci['uni_hex']))
         self.decCode.setText(ci['uni_dec'])
