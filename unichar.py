@@ -84,7 +84,7 @@ class UniChar(QDialog):
 
     def change_by_char(self):
         _char = self.myChar.text()
-        self.displayText2(_char)
+        self.displayText(_char)
 
     def change_by_hex(self):
         # TODO
@@ -96,7 +96,7 @@ class UniChar(QDialog):
         try:
             _code = int(unicode(_code), 16)  #convert hex to integer
             _char = unichr(_code)
-            self.displayText2(_char)
+            self.displayText(_char)
         except:
             self.clear()
 
@@ -104,7 +104,7 @@ class UniChar(QDialog):
         _code = self.decCode.text()
         try:
             _char = unichr(int(_code))
-            self.displayText2(_char)
+            self.displayText(_char)
         except:
             self.clear()
 
@@ -134,16 +134,6 @@ class UniChar(QDialog):
         self.setFormatText("")
 
     def displayText(self, _char):
-        ci = self.setCharInfo(_char)
-
-        self.myChar.setText(QString(ci['char']))
-        self.hexCode.setText(QString(ci['uni_hex']))
-        self.decCode.setText(ci['uni_dec'])
-        self.lblUniName.setText(ci['uni_name'])
-        self.lblCategory.setText(get_category(ci['cat']))
-        self.setFormatText(ci['uni_hex'])
-
-    def displayText2(self, _char):
         ci = self.setCharInfo(_char)
         try:
             self.myChar.setText(QString(ci['char']))
