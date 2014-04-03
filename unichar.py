@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 myname = "UniChar"
-__version__ = '0.6.1.1'
+__version__ = '0.6.1.2'
 
 import sys
 import unicodedata
@@ -84,17 +84,8 @@ class UniChar(QDialog):
 
     def change_by_char(self):
         _char = self.myChar.text()
-        try:
-            self.displayText(_char)
-        except:
-            self.clear()
-        finally:
-            # TODO
-            # refactoring: selectAll(myChar)
-            self.myChar.selectAll()
+        self.displayText2(_char)
 
-    # TODO
-    # rename func name
     def change_by_hex(self):
         # TODO
         # 한글을 입력한 후 10진수 입력하면 16진수값이 바뀌지 않는 문제 있음
@@ -105,25 +96,17 @@ class UniChar(QDialog):
         try:
             _code = int(unicode(_code), 16)  #convert hex to integer
             _char = unichr(_code)
-            self.displayText(_char)
+            self.displayText2(_char)
         except:
             self.clear()
-        finally:
-            # TODO
-            # refactoring: selectAll(myCode)
-            self.hexCode.selectAll()
 
     def change_by_dec(self):
         _code = self.decCode.text()
         try:
             _char = unichr(int(_code))
-            self.displayText(_char)
+            self.displayText2(_char)
         except:
             self.clear()
-        finally:
-            # TODO
-            # refactoring: selectAll(decCode)
-            self.decCode.selectAll()
 
     def setFormatText(self, code):
         self.lblFileFormat.setText("<a href='http://www.fileformat.info/info/unicode/char/{}/index.htm'>more info</a>".format(unicode(code)))
@@ -160,6 +143,22 @@ class UniChar(QDialog):
         self.lblCategory.setText(get_category(ci['cat']))
         self.setFormatText(ci['uni_hex'])
 
+    def displayText2(self, _char):
+        ci = self.setCharInfo(_char)
+        try:
+            self.myChar.setText(QString(ci['char']))
+            self.hexCode.setText(QString(ci['uni_hex']))
+            self.decCode.setText(ci['uni_dec'])
+            self.lblUniName.setText(ci['uni_name'])
+            self.lblCategory.setText(get_category(ci['cat']))
+            self.setFormatText(ci['uni_hex'])
+        except:
+            self.clear()
+        finally:
+            self.selectAll(self.sender())
+
+    def selectAll(self, sender):
+        sender.selectAll()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
