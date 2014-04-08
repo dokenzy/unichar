@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 myname = "UniChar"
-__version__ = '0.6.1.2'
+__version__ = '0.6.2'
 
 import sys
 import unicodedata
-from PyQt4.QtGui import QDialog, QApplication, QGridLayout, QHBoxLayout, QVBoxLayout, QLabel, QLineEdit, QPushButton
+from PyQt4.QtGui import QDialog, QApplication, QGridLayout, QHBoxLayout, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFont
 from PyQt4.QtCore import Qt, SIGNAL, QString
 
 from categories import CATEGORIES
@@ -31,6 +31,9 @@ class UniChar(QDialog):
         self.hexCode = QLineEdit()
         self.lblUnicodeDec = QLabel("Unicode Dec")
         self.decCode = QLineEdit()
+        self._lblShowGlyph = QLabel("Glyph")
+        self.lblShowGlyph = QLabel()
+        self.lblShowGlyph.setFont(QFont("함초롬돋움 LVT", 90))
         self._lblUniName = QLabel("Unicode Name")
         self.lblUniName = QLabel()
         self.lblUniName.setAlignment(Qt.AlignRight)
@@ -58,6 +61,8 @@ class UniChar(QDialog):
         layout3.addWidget(self.decCode)
 
         layout4 = QVBoxLayout()
+        layout4.addWidget(self._lblShowGlyph)
+        layout4.addWidget(self.lblShowGlyph)
         layout4.addWidget(self._lblUniName)
         layout4.addWidget(self.lblUniName)
 
@@ -137,6 +142,7 @@ class UniChar(QDialog):
         ci = self.setCharInfo(_char)
         try:
             self.myChar.setText(QString(ci['char']))
+            self.lblShowGlyph.setText(QString(ci['char']))
             self.hexCode.setText(QString(ci['uni_hex']))
             self.decCode.setText(ci['uni_dec'])
             self.lblUniName.setText(ci['uni_name'])
