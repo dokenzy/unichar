@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
+# Python 3.3
 from __future__ import unicode_literals
 myname = "UniChar"
-__version__ = '0.6.2.1'
+__version__ = '0.7'
 
 import sys
 import unicodedata
 from PyQt4.QtGui import QDialog, QApplication, QGridLayout, QHBoxLayout, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFont
-from PyQt4.QtCore import Qt, SIGNAL, QString
+from PyQt4.QtCore import Qt, SIGNAL
+try:
+    from PyQt4.QtCore import QString
+except:
+    QString = str
 
 from categories import CATEGORIES
 
@@ -14,6 +19,8 @@ from categories import CATEGORIES
 def get_category(cat):
     return CATEGORIES[cat]
 
+glhypfont = QFont("Aegyptus")
+glhypfont.setPointSize(90)
 
 class UniChar(QDialog):
     def __init__(self, parent=None):
@@ -33,9 +40,7 @@ class UniChar(QDialog):
         self.decCode = QLineEdit()
         self._lblShowGlyph = QLabel("Glyph")
         self.lblShowGlyph = QLabel()
-        font = QFont()
-        font.setPointSize(90)
-        self.lblShowGlyph.setFont(font)
+        self.lblShowGlyph.setFont(glhypfont)
         self._lblUniName = QLabel("Unicode Name")
         self.lblUniName = QLabel()
         self.lblUniName.setAlignment(Qt.AlignRight)
@@ -97,12 +102,12 @@ class UniChar(QDialog):
         # TODO
         # 한글을 입력한 후 10진수 입력하면 16진수값이 바뀌지 않는 문제 있음
         _code = self.hexCode.text()
-        _code = _code.toUpper()
+        _code = _code.upper()
         if _code[0:2] == QString('U+'):
             _code = _code[2:]
         try:
-            _code = int(unicode(_code), 16)  #convert hex to integer
-            _char = unichr(_code)
+            _code = int(str(_code), 16)  #convert hex to integer
+            _char = chr(_code)
             self.displayText(_char)
         except:
             self.clear()
@@ -110,18 +115,18 @@ class UniChar(QDialog):
     def change_by_dec(self):
         _code = self.decCode.text()
         try:
-            _char = unichr(int(_code))
+            _char = chr(int(_code))
             self.displayText(_char)
         except:
             self.clear()
 
     def setFormatText(self, code):
-        self.lblFileFormat.setText("<a href='http://www.fileformat.info/info/unicode/char/{}/index.htm'>more info</a>".format(unicode(code)))
+        self.lblFileFormat.setText("<a href='http://www.fileformat.info/info/unicode/char/{}/index.htm'>more info</a>".format(str(code)))
 
     def setCharInfo(self, _char):
-        ch = unicode(_char)  # ex) 'a', '가', ...
-        uni_hex = "%04X" % (ord(unicode(_char)))  # if '가': AC00
-        uni_dec = unicode(ord(ch))  # if '가': 44032
+        ch = str(_char)  # ex) 'a', '가', ...
+        uni_hex = "%04X" % (ord(str(_char)))  # if '가': AC00
+        uni_dec = str(ord(ch))  # if '가': 44032
         uni_name = unicodedata.name(ch)  # if '가': HANGUL SYLLABLE GA
         cat = unicodedata.category(ch)  # if '가': Lo
         return dict(char=_char,
