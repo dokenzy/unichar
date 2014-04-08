@@ -10,17 +10,20 @@ Screenshot
 Usage
 -----
  * Character: Input a character and hit Enter. If multi-bytes character like '가', hit Enter 2 times.
- * Unicode: 'AC00' or 'U+AC00'(case insensitive)
+ * Unicode Code Point(Hex): 'AC00' or 'U+AC00'(case insensitive)
+ * Unicode Decimal: 44032
 
 
 Require
 --------
-Python 2.7, PyQt4
+Python 3.3+, PyQt4
 
 
 Build
 -----
-$ pyinstaller unichar.py --windowed
+~~$ pyinstaller unichar.py --windowed~~
+
+$ python setup.py py2app
 
 
 To Do
