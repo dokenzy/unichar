@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 myname = "UniChar"
-__version__ = '0.6.2'
+__version__ = '0.6.2.1'
 
 import sys
 import unicodedata
@@ -132,6 +132,7 @@ class UniChar(QDialog):
 
     def clear(self):
         self.myChar.setText("")
+        self.lblShowGlyph.setText("")
         self.hexCode.setText("")
         self.decCode.setText("")
         self.lblUniName.setText("")
